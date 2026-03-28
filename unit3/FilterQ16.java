@@ -11,7 +11,7 @@ class Student {
     }
 }
 
-public class PracticeQ16 {
+public class FilterQ16 {
     public static void main(String[] args) {
 
         // List<Student> students = Arrays.asList(
