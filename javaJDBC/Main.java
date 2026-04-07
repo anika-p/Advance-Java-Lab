@@ -14,16 +14,18 @@ public class Main {
                     salary DECIMAL(10,2)
                     )
                     """;
+                
 
             Connection con = DriverManager.getConnection(url, user, pass);
 
             System.out.println("Connected Successfully!");
-            Statement smt=con.createStatement();
+            Statement smt=con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE
+            );
             smt.execute(create_table);
             System.out.println("Table is ready");
             // int rowAffected=smt.executeUpdate("""
             //         insert into employee(id,name,salary)
-            //         values(3,'Riya',60000.00)
+            //         values(5,'Garima',45000.00)
             //         """);
             // if(rowAffected>0){
             //     System.out.println("Record inserted");
@@ -33,14 +35,20 @@ public class Main {
             // }
 
             ResultSet rs=smt.executeQuery("select * from employee");
-            System.out.println(String.format("ID|Name|Salary"));
+            System.out.println(String.format("ID\tName\tSalary"));
+            
             while(rs.next()){
+                
+                long salary=rs.getLong("salary");
+                if(salary<=40000){
+                    rs.updateDouble("Salary", salary*1.5);
+                    rs.updateRow();
+                }
                 int id=rs.getInt("id");
                 String name=rs.getString("name");
-                long salary=rs.getLong("salary");
-                System.out.println(String.format("%d|%s|%d"
+                salary=rs.getLong("salary");
+                System.out.println(String.format("%d\t%s\t%d"
                     ,id,name,salary));
-                
             }
             rs.close();smt.close();con.close();
 
